@@ -1,1 +1,8 @@
 /.idea
+/data
+/flagged
+/_pycache_
+/codes/android
+/other
+/whisper
+exportWhisper.py
