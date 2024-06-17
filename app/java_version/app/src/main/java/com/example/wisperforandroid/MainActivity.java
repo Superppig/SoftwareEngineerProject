@@ -205,6 +205,5 @@ public class MainActivity extends AppCompatActivity {
 
         byteStream.flush();
         return byteStream.toByteArray();
-
     }
 }

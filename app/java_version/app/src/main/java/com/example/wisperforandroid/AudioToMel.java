@@ -36,23 +36,6 @@ public class AudioToMel{
     private static final int SAMPLE_RATE  = 16000;// 采样率
     private static final int MAX_AUDIO_LENGTH_IN_SECONDS  = 30;// 最大音频长度（秒）
 
-    public static OnnxTensor fromRawPcmBytes(byte[] rawBytes) throws OrtException { // 定义从原始 PCM 字节数据创建 OnnxTensor 的方法
-        ByteBuffer rawByteBuffer = ByteBuffer.wrap(rawBytes);// 将原始字节数组包装为 ByteBuffer
-        // 检查原生字节顺序
-        if (ByteOrder.nativeOrder() != ByteOrder.LITTLE_ENDIAN) {// 如果本地字节顺序不是小端序
-            throw new UnsupportedOperationException("Reading PCM data is only supported when native byte order is little-endian.");// 抛出未实现的错误
-        }
-        rawByteBuffer.order(ByteOrder.nativeOrder());// 设置 ByteBuffer 的字节顺序为本地字节顺序
-        FloatBuffer floatBuffer = rawByteBuffer.asFloatBuffer();// 将 ByteBuffer 转换为浮点数缓冲区
-        // 计算样本数并创建 OnnxTensor
-        int numSamples = Math.min(floatBuffer.capacity(), MAX_AUDIO_LENGTH_IN_SECONDS * SAMPLE_RATE);// 计算样本数，取较小值
-        OrtEnvironment env = OrtEnvironment.getEnvironment();// 获取 ONNX 运行环境实例
-        OnnxTensor originTensor = OnnxTensor.createTensor(env, floatBuffer, tensorShape(1, numSamples));// 创建 OnnxTensor 实例,使用环境、浮点数缓冲区和张量形状创建张量
-        ///ODO:将originTensor转化为对数梅尔谱图
-
-        ///
-        return originTensor;
-    }
     public static OnnxTensor fromRecording(AtomicBoolean stopRecordingFlag) throws OrtException{// 定义从录音中创建 OnnxTensor 的方法
         int recordingChunkLengthInSeconds = 1;// 录音块长度（秒）
 
