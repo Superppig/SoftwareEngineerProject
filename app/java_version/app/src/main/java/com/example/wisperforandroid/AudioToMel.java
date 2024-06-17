@@ -48,7 +48,7 @@ public class AudioToMel{
         int numSamples = Math.min(floatBuffer.capacity(), MAX_AUDIO_LENGTH_IN_SECONDS * SAMPLE_RATE);// 计算样本数，取较小值
         OrtEnvironment env = OrtEnvironment.getEnvironment();// 获取 ONNX 运行环境实例
         OnnxTensor originTensor = OnnxTensor.createTensor(env, floatBuffer, tensorShape(1, numSamples));// 创建 OnnxTensor 实例,使用环境、浮点数缓冲区和张量形状创建张量
-        ///TODO:将originTensor转化为对数梅尔谱图
+        ///ODO:将originTensor转化为对数梅尔谱图
 
         ///
         return originTensor;
@@ -117,8 +117,10 @@ public class AudioToMel{
             FloatBuffer floatAudioDataBuffer = FloatBuffer.wrap(floatAudioData);
 
             OnnxTensor originTensor = OnnxTensor.createTensor(env, floatAudioDataBuffer, tensorShape(1, floatAudioData.length));
-            ///TODO:转化为梅尔频谱图
+            ///TODO:实现历史记录功能
             ///
+
+
             return originTensor;
 
         } finally {

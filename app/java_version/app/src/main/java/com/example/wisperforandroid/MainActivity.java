@@ -23,16 +23,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-    public class MainActivity extends AppCompatActivity {
-
-        public static final String TAG = "WhisperForAndroid";
-        public static String message;
-
-        public static final int REQUEST_PERMISSION_CODE = 100;
-        private Button usePrerecordedAudioButton, stopRecordingAudioButton,recordAudioButton;
-        private TextView resultText;
-        private TextView statusText;
-        private TextView debugTextV;
+public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "WhisperForAndroid";
+    public static String message;
+    public static final int REQUEST_PERMISSION_CODE = 100;
+    private Button stopRecordingAudioButton,recordAudioButton;
+    private TextView resultText;
+    private TextView statusText;
     // 语音识别器
     private WhisperUsing whisperUsing;
     // 标志线程是否停止录制
@@ -50,18 +47,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
         setContentView(R.layout.activity_main);
 
         // 初始化UI元素
-        usePrerecordedAudioButton = findViewById(R.id.useEXP);
-        stopRecordingAudioButton = findViewById(R.id.stopButton);
-        recordAudioButton = findViewById(R.id.recordButton);
-        resultText = findViewById(R.id.filePathTextView);
-        statusText = findViewById(R.id.statusText);
-
-        debugTextV = findViewById(R.id.debugText);
+        stopRecordingAudioButton = findViewById(R.id.stop_recording_audio_button);
+        recordAudioButton = findViewById(R.id.record_audio_button);
+        resultText = findViewById(R.id.result_text);
+        statusText = findViewById(R.id.status_text);
 
         // 初始化语音识别器
         try {
             whisperUsing = new WhisperUsing(StreamToBytes(getResources().openRawResource(R.raw.whisper_cpu_int8_model)));
-            debugTextV.setText(message);
         }
         catch (OrtException e)
         {
@@ -74,27 +67,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
             statusText.setText("Can not read the model");
         }
 
-        // 设置点击事件监听器
-        usePrerecordedAudioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                disableAudioButtons();
-                workerThreadExecutor.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            // 实现语音识别
-                            WhisperUsing.Result result = whisperUsing.run(AudioToMel.fromRawPcmBytes(StreamToBytes(getResources().openRawResource(R.raw.audio_mono_16khz_f32le))));
-                            setSuccessfulResult(result);
-                        } catch (Exception e) {
-                            setError(e);
-                        } finally {
-                            resetDefaultAudioButtonState();
-                        }
-                    }
-                });
-            }
-        });
 
         // 设置点击事件监听器
         recordAudioButton.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +93,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
                         } catch (Exception e) {
                             setError(e);
                         } finally {
+
                             resetDefaultAudioButtonState();
                         }
                     }
@@ -184,7 +157,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                usePrerecordedAudioButton.setEnabled(true);
                 recordAudioButton.setEnabled(true);
                 stopRecordingAudioButton.setEnabled(false);
             }
@@ -196,7 +168,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                usePrerecordedAudioButton.setEnabled(false);
                 recordAudioButton.setEnabled(false);
                 stopRecordingAudioButton.setEnabled(false);
             }
